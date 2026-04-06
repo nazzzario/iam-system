@@ -11,6 +11,10 @@ spring:
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -24,6 +28,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/iam-realm}
+          jwk-set-uri: ${KEYCLOAK_JWK_URI:http://keycloak:8080/realms/iam-realm/protocol/openid-connect/certs}
 
 management:
   endpoints:
@@ -41,3 +46,4 @@ logging:
   level:
     root: INFO
     com.example.user.security: DEBUG
+    org.springframework.security: DEBUG
