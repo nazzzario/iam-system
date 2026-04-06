@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw test:*)",
+      "Bash(jar tf:*)",
+      "Bash(JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw test:*)"
+    ]
+  }
+}
