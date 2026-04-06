@@ -42,6 +42,9 @@ springdoc:
   api-docs:
     path: /v3/api-docs
 
+keycloak:
+  token-url: http://localhost:8080/realms/iam-realm/protocol/openid-connect/token
+
 logging:
   level:
     root: INFO
