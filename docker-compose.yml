@@ -83,6 +83,26 @@ services:
     networks:
       - iam-network
 
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: iam-api-gateway
+    environment:
+      SERVER_PORT: 8888
+      USER_SERVICE_URL: http://user-service:8081
+      KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/iam-realm
+      KEYCLOAK_JWK_URI: http://keycloak:8080/realms/iam-realm/protocol/openid-connect/certs
+    ports:
+      - "8888:8888"
+    depends_on:
+      user-service:
+        condition: service_started
+      keycloak:
+        condition: service_started
+    networks:
+      - iam-network
+
 networks:
   iam-network:
     driver: bridge

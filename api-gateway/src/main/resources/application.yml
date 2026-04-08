@@ -1,0 +1,40 @@
+server:
+  port: ${SERVER_PORT:8888}
+
+spring:
+  application:
+    name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/iam-realm}
+          jwk-set-uri: ${KEYCLOAK_JWK_URI:http://keycloak:8080/realms/iam-realm/protocol/openid-connect/certs}
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: ${USER_SERVICE_URL:http://user-service:8081}
+              predicates:
+                - Path=/api/v1/users/**, /api/v1/admin/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    root: INFO
+    com.example.apigateway: DEBUG
