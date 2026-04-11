@@ -18,13 +18,18 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private KeycloakAdminService keycloakAdminService;
 
     @InjectMocks
     private UserService userService;
@@ -103,6 +108,7 @@ class UserServiceTest {
         UUID id = testUser.getId();
         when(userRepository.findById(id)).thenReturn(Optional.of(testUser));
         when(userRepository.save(testUser)).thenReturn(testUser);
+        doNothing().when(keycloakAdminService).updateUserStatus(any(), anyBoolean());
 
         userService.deactivateUser(id);
 
