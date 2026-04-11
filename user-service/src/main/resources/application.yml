@@ -44,6 +44,11 @@ springdoc:
 
 keycloak:
   token-url: http://localhost:8080/realms/iam-realm/protocol/openid-connect/token
+  admin:
+    server-url: ${KEYCLOAK_SERVER_URL:http://keycloak:8080}
+    realm: ${KEYCLOAK_REALM:iam-realm}
+    client-id: ${KEYCLOAK_CLIENT_ID:iam-client}
+    client-secret: ${KEYCLOAK_CLIENT_SECRET:}
 
 logging:
   level:

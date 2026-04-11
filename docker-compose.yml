@@ -65,6 +65,8 @@ services:
       context: ./user-service
       dockerfile: Dockerfile
     container_name: iam-user-service
+    env_file:
+      - .env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -73,6 +75,10 @@ services:
       DB_PASSWORD: postgres
       KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/iam-realm
       KEYCLOAK_JWK_URI: http://keycloak:8080/realms/iam-realm/protocol/openid-connect/certs
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: iam-realm
+      KEYCLOAK_CLIENT_ID: iam-client
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     ports:
       - "8081:8081"
     depends_on:
