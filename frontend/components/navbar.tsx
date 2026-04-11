@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { getRoles, hasRole } from "@/lib/jwt";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ export function Navbar() {
   };
 
   const isAdmin = hasRole(session?.accessToken, "ADMIN");
+  const isManager = hasRole(session?.accessToken, "MANAGER");
 
   const email = session?.user?.email ?? "";
   const initials =
@@ -45,6 +47,7 @@ export function Navbar() {
         <nav className="flex items-center gap-6">
           <span className="font-semibold">IAM System</span>
           {navLink("/dashboard", "Dashboard")}
+          {isManager && !isAdmin && navLink("/dashboard", "Reports")}
           {isAdmin && navLink("/admin", "Admin")}
         </nav>
         <div className="flex items-center gap-3">
@@ -54,6 +57,7 @@ export function Navbar() {
           <span className="hidden text-sm text-muted-foreground sm:block">
             {email}
           </span>
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"

@@ -18,3 +18,7 @@ export function hasRole(accessToken: string | undefined, role: string): boolean 
   const roles = getRoles(accessToken);
   return roles.includes(role) || roles.includes(`ROLE_${role}`);
 }
+
+export function isManagerRole(accessToken: string | undefined): boolean {
+  return hasRole(accessToken, "MANAGER");
+}
