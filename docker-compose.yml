@@ -109,6 +109,28 @@ services:
     networks:
       - iam-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: iam-frontend
+    environment:
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: iam-system-super-secret-key-2024
+      KEYCLOAK_CLIENT_ID: iam-client
+      KEYCLOAK_ISSUER: http://keycloak:8080/realms/iam-realm
+      KEYCLOAK_ISSUER_PUBLIC: http://localhost:8080/realms/iam-realm
+      NEXT_PUBLIC_API_URL: http://localhost:8888
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+      - keycloak
+    networks:
+      - iam-network
+
 networks:
   iam-network:
     driver: bridge
