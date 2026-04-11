@@ -10,6 +10,7 @@ import com.example.user.dto.UserResponse;
 import com.example.user.entity.User;
 import com.example.user.exception.UserNotFoundException;
 import com.example.user.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,11 +57,17 @@ public class UserService {
         return userRepository.findByKeycloakId(keycloakId)
                 .map(this::toResponse)
                 .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .keycloakId(keycloakId)
-                            .email(email)
-                            .build();
-                    return toResponse(userRepository.save(newUser));
+                    try {
+                        User newUser = User.builder()
+                                .keycloakId(keycloakId)
+                                .email(email)
+                                .build();
+                        return toResponse(userRepository.save(newUser));
+                    } catch (DataIntegrityViolationException e) {
+                        return userRepository.findByKeycloakId(keycloakId)
+                                .map(this::toResponse)
+                                .orElseThrow(() -> new UserNotFoundException("User not found: " + keycloakId));
+                    }
                 });
     }
 
