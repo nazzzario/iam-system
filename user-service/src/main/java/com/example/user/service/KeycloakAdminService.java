@@ -89,4 +89,16 @@ class KeycloakAdminService {
 
         assignRoles(keycloakId, newRoles);
     }
+
+    private static final List<String> DEFAULT_ROLES =
+            List.of("default-roles-iam-realm", "offline_access", "uma_authorization");
+
+    String getUserRole(String keycloakId) {
+        return keycloak.realm(realm).users().get(keycloakId).roles().realmLevel().listAll()
+                .stream()
+                .map(RoleRepresentation::getName)
+                .filter(name -> !DEFAULT_ROLES.contains(name))
+                .findFirst()
+                .orElse("USER");
+    }
 }

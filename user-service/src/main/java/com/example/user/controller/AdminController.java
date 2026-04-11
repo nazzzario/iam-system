@@ -4,7 +4,6 @@ import com.example.user.dto.AdminUserResponse;
 import com.example.user.dto.CreateUserRequest;
 import com.example.user.dto.StatsResponse;
 import com.example.user.dto.UpdateUserRoleRequest;
-import com.example.user.dto.UserResponse;
 import com.example.user.exception.ErrorResponse;
 import com.example.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +44,7 @@ class AdminController {
             @ApiResponse(responseCode = "403", description = "Access denied — ADMIN role required",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<List<UserResponse>> getAllUsers() {
+    ResponseEntity<List<AdminUserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

@@ -80,9 +80,9 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
-    public List<UserResponse> getAllUsers() {
+    public List<AdminUserResponse> getAllUsers() {
         return userRepository.findAllByIsActiveTrue().stream()
-                .map(this::toResponse)
+                .map(user -> toAdminResponse(user, keycloakAdminService.getUserRole(user.getKeycloakId())))
                 .toList();
     }
 
