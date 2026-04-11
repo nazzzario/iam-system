@@ -94,11 +94,16 @@ class KeycloakAdminService {
             List.of("default-roles-iam-realm", "offline_access", "uma_authorization");
 
     String getUserRole(String keycloakId) {
-        return keycloak.realm(realm).users().get(keycloakId).roles().realmLevel().listAll()
-                .stream()
-                .map(RoleRepresentation::getName)
-                .filter(name -> !DEFAULT_ROLES.contains(name))
-                .findFirst()
-                .orElse("USER");
+        try {
+            return keycloak.realm(realm).users().get(keycloakId).roles().realmLevel().listAll()
+                    .stream()
+                    .map(RoleRepresentation::getName)
+                    .filter(name -> !DEFAULT_ROLES.contains(name))
+                    .findFirst()
+                    .orElse("USER");
+        } catch (jakarta.ws.rs.NotFoundException e) {
+            log.debug("User {} not found in Keycloak, defaulting role to USER", keycloakId);
+            return "USER";
+        }
     }
 }
