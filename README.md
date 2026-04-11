@@ -16,48 +16,48 @@
 ## 📐 Architecture
 
 ```
-                        ┌─────────────────────────────────────────────┐
-                        │               Docker Network                │
-                        │                 iam-network                 │
-                        │                                             │
-  Browser / Client      │  ┌──────────┐     ┌─────────────────────┐  │
-  ─────────────────────►│  │ Frontend │────►│    API Gateway      │  │
-  :3000 (Next.js)       │  │ Next.js  │     │  Spring Cloud GW    │  │
-                        │  │ :3000    │     │  JWT validation     │  │
-                        │  └────┬─────┘     │  :8888              │  │
-                        │       │           └──────────┬──────────┘  │
-                        │       │ OAuth2/OIDC           │ Bearer fwd  │
-                        │       │                       ▼             │
-                        │       │           ┌─────────────────────┐  │
-                        │       │           │   user-service      │  │
-                        │       │           │  Spring Boot MVC    │  │
-                        │       │           │  Resource Server    │  │
-                        │       │           │  :8081              │  │
-                        │       │           └──────────┬──────────┘  │
-                        │       │                      │ JPA/Flyway  │
-                        │       │                      ▼             │
-                        │       │           ┌─────────────────────┐  │
-                        │       │           │     PostgreSQL       │  │
-                        │       │           │     userdb          │  │
-                        │       │           │     :5432           │  │
-                        │       │           └─────────────────────┘  │
-                        │       │                                     │
-                        │       ▼                                     │
-                        │  ┌──────────────────────┐                  │
-                        │  │      Keycloak         │                  │
-                        │  │   Auth Server         │                  │
-                        │  │   Realm: iam-realm    │                  │
-                        │  │   Client: iam-client  │                  │
-                        │  │   :8080               │                  │
-                        │  └──────────┬────────────┘                  │
-                        │             │ JDBC                          │
-                        │             ▼                               │
-                        │  ┌──────────────────────┐                  │
-                        │  │  Keycloak PostgreSQL  │                  │
-                        │  │  keycloak DB          │                  │
-                        │  │  :5433                │                  │
-                        │  └──────────────────────┘                  │
-                        └─────────────────────────────────────────────┘
+                        ┌──────────────────────────────────────────────┐
+                        │               Docker Network                 │
+                        │                 iam-network                  │
+                        │                                              │
+  Browser / Client      │  ┌──────────┐     ┌─────────────────────┐    │
+  ─────────────────────►│  │ Frontend │────►│    API Gateway      │    │
+  :3000 (Next.js)       │  │ Next.js  │     │  Spring Cloud GW    │    │
+                        │  │ :3000    │     │  JWT validation     │    │
+                        │  └────┬─────┘     │  :8888              │    │
+                        │       │           └──────────┬──────────┘    │
+                        │       │ OAuth2/OIDC           │ Bearer fwd   │
+                        │       │                       ▼              │
+                        │       │           ┌─────────────────────┐    │
+                        │       │           │   user-service      │    │
+                        │       │           │  Spring Boot MVC    │    │
+                        │       │           │  Resource Server    │    │
+                        │       │           │  :8081              │    │
+                        │       │           └──────────┬──────────┘    │
+                        │       │                      │ JPA/Flyway    │
+                        │       │                      ▼               │
+                        │       │           ┌─────────────────────┐    │
+                        │       │           │     PostgreSQL      │    │
+                        │       │           │     userdb          │    │
+                        │       │           │     :5432           │    │
+                        │       │           └─────────────────────┘    │
+                        │       │                                      │
+                        │       ▼                                      │
+                        │  ┌──────────────────────┐                    │
+                        │  │      Keycloak         │                   │
+                        │  │   Auth Server         │                   │
+                        │  │   Realm: iam-realm    │                   │
+                        │  │   Client: iam-client  │                   │
+                        │  │   :8080               │                   │
+                        │  └──────────┬────────────┘                   │
+                        │             │ JDBC                           │
+                        │             ▼                                │
+                        │  ┌──────────────────────┐                    │
+                        │  │  Keycloak PostgreSQL  │                   │
+                        │  │  keycloak DB          │                   │
+                        │  │  :5433                │                   │
+                        │  └──────────────────────┘                    │
+                        └──────────────────────────────────────────────┘
 ```
 
 **Security model — defense in depth:**
@@ -119,10 +119,10 @@ These accounts are pre-configured in Keycloak and seeded into the local database
 
 | Username | Password | Role | Notes |
 |---|---|---|---|
-| `admin` | `admin` | `ADMIN` | Keycloak admin console |
+| `admin` | `password` | `ADMIN` | Keycloak admin console |
 | `john` | `john123` | `ROLE_USER` | Regular user |
 | `alice` | `alice123` | `ROLE_ADMIN` | System administrator |
-| `manager` | `manager123` | `ROLE_MANAGER` | Manager — stats view only |
+| `manager` | `password` | `ROLE_MANAGER` | Manager — stats view only |
 
 > **Note:** Roles live exclusively in Keycloak (`realm_access.roles`). The local database stores profile data only — never credentials or roles.
 
